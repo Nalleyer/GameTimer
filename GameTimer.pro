@@ -15,12 +15,15 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     gamelist.cpp \
-    datamanager.cpp
+    datamanager.cpp \
+    inputtimedialog.cpp
 
 HEADERS  += mainwindow.h \
     gamelist.h \
-    datamanager.h
+    datamanager.h \
+    inputtimedialog.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    inputtimedialog.ui
 
 CONFIG += c++11

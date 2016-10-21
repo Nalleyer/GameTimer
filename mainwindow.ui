@@ -29,7 +29,30 @@
       <height>281</height>
      </rect>
     </property>
-    <layout class="QHBoxLayout" name="layoutMain"/>
+    <layout class="QHBoxLayout" name="layoutMain">
+     <item>
+      <layout class="QVBoxLayout" name="layoutList">
+       <item>
+        <layout class="QHBoxLayout" name="layoutButton">
+         <item>
+          <widget class="QPushButton" name="buttonRun">
+           <property name="text">
+            <string>run</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="buttonDelete">
+           <property name="text">
+            <string>remove</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
