@@ -7,30 +7,34 @@
 #include <QListWidgetItem>
 #include <QFileInfo>
 #include <QVector>
+#include "gamerunner.h"
 
 class GameList : public QListWidget
 {
     Q_OBJECT
 public:
-    explicit GameList(QListWidget *parent = 0);
-    //add a new game
+    explicit GameList(const QVector<QString> & pathList, QWidget *parent = 0);
     void addGame(QString filePath);
-    //get list of game full path
+    /* [ full path ] */
     QVector<QString> getGameList() const;
-    //build items from list of game full path
-    void buildFromPathList(const QVector<QString> & pathList);
-    //
-    void runSelectedGame();
-    void removeSelectedGame();
 private:
+    int _numRunningGames;
+    GameRunner * _gameRunner;
     QMap<QListWidgetItem *, QFileInfo *>  _itemFileMap;
     void runGame(QListWidgetItem * pItem);
+    //build items from list of game full path
+    void buildFromPathList(const QVector<QString> & pathList);
+
+private slots:
+    void onGameExit(int exitID);
 
 signals:
-    void toRunGame(QString filePath);
-
+    void allGameExited();
+    void firstGameStarted();
 public slots:
     void listItemDoubleClicked(QListWidgetItem * pItem);
+    void runSelectedGame();
+    void removeSelectedGame();
 };
 
 #endif // GAMELIST_H

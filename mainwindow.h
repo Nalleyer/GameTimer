@@ -2,11 +2,12 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <gamelist.h>
-#include <datamanager.h>
-#include <inputtimedialog.h>
-#include <QLCDNumber>
 #include <QString>
+#include "gamelist.h"
+#include "datamanager.h"
+#include "inputtimedialog.h"
+#include "timedisplayer.h"
+#include "datasaver.h"
 
 namespace Ui {
 class MainWindow;
@@ -34,9 +35,15 @@ private slots:
 private:
     Ui::MainWindow *ui;
     GameList * _gameList;
-    QLCDNumber * _lcdTime;
-    DataManager * _dataManager;
+    TimeDisplayer * _timer;
     InputTimeDialog * _timeDialog;
+    DataSaver * _dataSaver;
+    /*
+     * load when init, changed by input, save when exit
+     */
+    SavingData _savingData;
+
+    bool dateDiffToSavedDate();
 
     void closeEvent(QCloseEvent * event);
 };

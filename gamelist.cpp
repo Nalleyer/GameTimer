@@ -2,13 +2,18 @@
 
 #include <QDebug>
 
-GameList::GameList(QListWidget *parent) : QListWidget(parent)
+GameList::GameList(const QVector<QString> &pathList, QWidget *parent) :
+    QListWidget(parent),
+    _numRunningGames(0)
 {
     setFixedWidth(180);
-    connect(
-                this,SIGNAL(itemDoubleClicked(QListWidgetItem*)),
+    _gameRunner = new GameRunner();
+    buildFromPathList(pathList);
+    connect(	this,SIGNAL(itemDoubleClicked(QListWidgetItem*)),
                 this,SLOT(listItemDoubleClicked(QListWidgetItem*))
                 );
+    connect(_gameRunner, SIGNAL(gameExited(int)),
+            this, SLOT(onGameExit(int)));
 }
 
 void GameList::addGame(QString filePath)
@@ -26,8 +31,13 @@ void GameList::addGame(QString filePath)
 void GameList::runGame(QListWidgetItem *pItem)
 {
     QFileInfo * fI = _itemFileMap.value(pItem);
-    //emit
-    emit toRunGame(fI->filePath());
+    auto newProc = _gameRunner->runGame(fI->absoluteFilePath());
+    if (newProc != nullptr)
+    {
+        if (_numRunningGames == 0)
+            emit firstGameStarted();
+        ++ _numRunningGames;
+    }
 }
 
 void GameList::runSelectedGame()
@@ -79,4 +89,13 @@ QVector<QString> GameList::getGameList() const
         newList.append(i.value()->filePath());
     }
     return newList;
+}
+
+void GameList::onGameExit(int exitID)
+{
+    -- _numRunningGames;
+    if (0 == _numRunningGames)
+    {
+        emit allGameExited();
+    }
 }

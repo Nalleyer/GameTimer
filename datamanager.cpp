@@ -10,12 +10,8 @@
 
 DataManager::DataManager(QObject * parent)
     : QObject(parent),
-    _timingOn(false),
     _gameRunningCount(0)
 {
-    _timer = new QTimer(this);
-    _timer->setInterval(1000);
-    _leftTime = new QTime();
     _nowDate = new QDate();
     _saveJson = new QJsonObject();
     (*_nowDate) = QDate::currentDate();
@@ -43,10 +39,6 @@ DataManager::DataManager(QObject * parent)
     {
         defaultSetting();
     }
-    //connect
-    connect(_timer,SIGNAL(timeout()),
-            this,SLOT(updateLeftTime())
-            );
 }
 
 void DataManager::defaultSetting()
@@ -101,20 +93,6 @@ QString DataManager::getLeftTime() const
 {
     return _leftTime->toString();
 }
-
-QVector<QString> DataManager::getGameFullPathList() const
-{
-    QVector<QString> gameList;
-    QJsonArray jA = _saveJson->value(tr("games")).toArray();
-    qDebug() << "building path vector: ";
-    foreach (const QJsonValue & value, jA)
-    {
-        qDebug() << value.toString() << " ";
-        gameList.append(value.toString());
-    }
-    return gameList;
-}
-
 void DataManager::updateLeftTime()
 {
     //update time
@@ -126,21 +104,6 @@ void DataManager::updateLeftTime()
         emit timeChanged(_leftTime->toString());
     }
 }
-
-void DataManager::runGame(QString filePath)
-{
-    startTiming();
-    QProcess * newProcess = new QProcess;
-    newProcess->start(filePath);
-    _runningGames.append(newProcess);
-    qDebug() << "timing started,  vector size: :" << _runningGames.size() ;
-    connect(newProcess,SIGNAL(finished(int)),
-            this,SLOT(onGameExited(int)));
-    connect(newProcess,SIGNAL(finished(int)),
-            newProcess,SLOT(deleteLater()));
-//    system(filePath.toStdString().c_str());
-}
-
 void DataManager::removeEndedGames()
 {
 //    QVector<QProcess *>::iterator it = _runningGames.begin();
@@ -191,34 +154,4 @@ void DataManager::setTotalTime(QString time)
 void DataManager::resetLeftTime()
 {
     _leftTime->fromString(_totalTime);
-}
-
-void DataManager::saveToFile(const QVector<QString> & gameList) const
-//void DataManager::saveToFile(const QDate *nowDate, const QTime *leftTime, const QVector<QString> *gameList, const QString totalTime) const
-{
-    QJsonObject jO;
-    jO.insert(tr("date"),_nowDate->toString());
-    jO.insert(tr("leftTime"),_leftTime->toString());
-    jO.insert(tr("totalTime"),_totalTime);
-    QJsonArray jaGames;
-    for (int i = 0; i < gameList.size(); ++ i)
-    {
-        jaGames.insert(i,gameList[i]);
-    }
-    jO.insert(tr("games"),jaGames);
-    //document
-    QJsonDocument jD(jO);
-    QDir dir(_savePath);
-    if (! dir.exists())
-    {
-        dir.mkpath(".");
-    }
-    QFile targetFile(dir.absoluteFilePath(_saveName));
-    if (! targetFile.open(QFile::WriteOnly | QFile::Text) )
-    {
-        qDebug() << "save file open failed!";
-    }
-    targetFile.write(jD.toJson());
-    targetFile.close();
-
 }

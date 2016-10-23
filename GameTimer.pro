@@ -15,13 +15,19 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     gamelist.cpp \
-    datamanager.cpp \
-    inputtimedialog.cpp
+    inputtimedialog.cpp \
+    timedisplayer.cpp \
+    gamerunner.cpp \
+    datasaver.cpp \
+    savingdata.cpp
 
 HEADERS  += mainwindow.h \
     gamelist.h \
-    datamanager.h \
-    inputtimedialog.h
+    inputtimedialog.h \
+    timedisplayer.h \
+    gamerunner.h \
+    datasaver.h \
+    savingdata.h
 
 FORMS    += mainwindow.ui \
     inputtimedialog.ui

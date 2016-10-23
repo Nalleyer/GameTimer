@@ -6,7 +6,6 @@
 #include <QDate>
 #include <QTimer>
 #include <QString>
-#include <QProcess>
 #include <QVector>
 //#include <QJsonDocument>
 
@@ -14,10 +13,6 @@ class DataManager : public QObject
 {
     Q_OBJECT
 private:
-    QTime * _leftTime;
-    QString _totalTime;
-    QTimer * _timer;
-    bool _timingOn;
     /* set lefttime from json
      */
     void setLeftTimeFromJson();
@@ -28,11 +23,9 @@ private:
     void resetLeftTime();
     //now date when constructed
     QDate * _nowDate;
-
+    bool _dateChanged;
     /*	file path
      */
-    const QString _savePath = "./data";
-    const QString _saveName = ".save";
     /*	read file to json
      */
     bool readFileOnStart();
@@ -40,15 +33,10 @@ private:
     void defaultSetting();
     //a json
     QJsonObject * _saveJson;
-    bool _dateChanged;
 public:
     explicit DataManager(QObject *parent = 0);
     QString getLeftTime() const ;
     QVector<QString> getGameFullPathList() const;
-    //start timing
-    void startTiming();
-    //stop timing
-    void stopTiming();
     //set totalTime
     void setTotalTime(QString time);
     /* save date of today, leftTime, list of Game; filename and path is hardCoded
@@ -57,12 +45,8 @@ public:
      * list of Game:save for anytime
      * total time:	..
      */
-    void saveToFile(const QVector<QString> & gameList) const;
     bool dateChanged() {return _dateChanged;}
-signals:
-    void timeChanged(QString time);
 public slots:
-    void updateLeftTime();
     void runGame(QString filePath);
     void onGameExited(int ExitID);
 };
