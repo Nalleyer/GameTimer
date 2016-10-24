@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <QString>
+#include <QSystemTrayIcon>
+#include <QCloseEvent>
 #include "gamelist.h"
 #include "datamanager.h"
 #include "inputtimedialog.h"
@@ -32,8 +34,15 @@ private slots:
 
     void on_buttonDelete_clicked();
 
+    void sysTrayAction(QSystemTrayIcon::ActivationReason reason);
+
+    void reallyQuit();
+
+    void on_buttonAdd_clicked();
+
 private:
     Ui::MainWindow *ui;
+    QSystemTrayIcon * _sysTray;
     GameList * _gameList;
     TimeDisplayer * _timer;
     InputTimeDialog * _timeDialog;
@@ -41,11 +50,21 @@ private:
     /*
      * load when init, changed by input, save when exit
      */
+    void closeEvent(QCloseEvent * event);
     SavingData _savingData;
+
+    void save();
 
     bool dateDiffToSavedDate();
 
-    void closeEvent(QCloseEvent * event);
+    //
+    void initUI();
+    void initSavingData();
+    void initTimer();
+    void initGameList();
+    void initTimeDialog();
+    void initSysTray();
+
 };
 
 #endif // MAINWINDOW_H

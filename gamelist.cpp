@@ -6,7 +6,7 @@ GameList::GameList(const QVector<QString> &pathList, QWidget *parent) :
     QListWidget(parent),
     _numRunningGames(0)
 {
-    setFixedWidth(180);
+    setFixedWidth(220);
     _gameRunner = new GameRunner();
     buildFromPathList(pathList);
     connect(	this,SIGNAL(itemDoubleClicked(QListWidgetItem*)),

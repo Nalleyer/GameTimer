@@ -33,3 +33,6 @@ FORMS    += mainwindow.ui \
     inputtimedialog.ui
 
 CONFIG += c++11
+
+RESOURCES += \
+    imageresource.qrc
