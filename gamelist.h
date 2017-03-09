@@ -17,6 +17,7 @@ public:
     void addGame(QString filePath);
     /* [ full path ] */
     QVector<QString> getGameList() const;
+    void quitAllGames();
 private:
     int _numRunningGames;
     GameRunner * _gameRunner;
@@ -24,6 +25,8 @@ private:
     void runGame(QListWidgetItem * pItem);
     //build items from list of game full path
     void buildFromPathList(const QVector<QString> & pathList);
+    /* all process stared from GameTImer */
+    QVector<QProcess *> _runningGames;
 
 private slots:
     void onGameExit(int exitID);
@@ -32,7 +35,6 @@ signals:
     void allGameExited();
     void firstGameStarted();
 public slots:
-    void listItemDoubleClicked(QListWidgetItem * pItem);
     void runSelectedGame();
     void removeSelectedGame();
 };

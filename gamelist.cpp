@@ -6,12 +6,9 @@ GameList::GameList(const QVector<QString> &pathList, QWidget *parent) :
     QListWidget(parent),
     _numRunningGames(0)
 {
-    setFixedWidth(220);
+    setFixedWidth(240);
     _gameRunner = new GameRunner();
     buildFromPathList(pathList);
-    connect(	this,SIGNAL(itemDoubleClicked(QListWidgetItem*)),
-                this,SLOT(listItemDoubleClicked(QListWidgetItem*))
-                );
     connect(_gameRunner, SIGNAL(gameExited(int)),
             this, SLOT(onGameExit(int)));
 }
@@ -37,6 +34,15 @@ void GameList::runGame(QListWidgetItem *pItem)
         if (_numRunningGames == 0)
             emit firstGameStarted();
         ++ _numRunningGames;
+        _runningGames.append(newProc);
+    }
+}
+
+void GameList::quitAllGames()
+{
+    foreach (auto & p, _runningGames)
+    {
+        p->kill();
     }
 }
 
@@ -57,12 +63,6 @@ void GameList::removeSelectedGame()
         this->removeItemWidget(i);
         delete i;
     }
-}
-
-void GameList::listItemDoubleClicked(QListWidgetItem *pItem)
-{
-    qDebug() << "double clicked";
-    runGame(pItem);
 }
 
 void GameList::buildFromPathList(const QVector<QString> &pathList)
@@ -97,5 +97,6 @@ void GameList::onGameExit(int exitID)
     if (0 == _numRunningGames)
     {
         emit allGameExited();
+        _runningGames.clear();
     }
 }

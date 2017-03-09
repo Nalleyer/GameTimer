@@ -16,10 +16,13 @@ public:
     bool isTiming() const;
     void setTime(const QTime & time) {* _nowTime = time; refresh();}
     void refresh();
+    void checkTimeLimit();
 private:
     QTime * _nowTime;
     QTimer * _timer;
     bool _isTimingOn;
+signals:
+    void timeUsedOut();
 private slots:
     void updateTime();
 public slots:

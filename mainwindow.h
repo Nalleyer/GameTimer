@@ -32,6 +32,8 @@ private slots:
 
     void on_buttonRun_clicked();
 
+    void runSelectedGame();
+
     void on_buttonDelete_clicked();
 
     void sysTrayAction(QSystemTrayIcon::ActivationReason reason);
@@ -39,6 +41,8 @@ private slots:
     void reallyQuit();
 
     void on_buttonAdd_clicked();
+
+    void on_timeUsedOut();
 
 private:
     Ui::MainWindow *ui;

@@ -1,4 +1,5 @@
 #include "timedisplayer.h"
+#include <QDebug>
 
 TimeDisplayer::TimeDisplayer(const QTime &time, QWidget *parent) :
     QLCDNumber(parent)
@@ -30,10 +31,19 @@ bool TimeDisplayer::isTiming() const
     return _isTimingOn;
 }
 
+void TimeDisplayer::checkTimeLimit()
+{
+    if (* _nowTime == QTime::fromString("00:00:00"))
+    {
+        emit timeUsedOut();
+    }
+}
+
 void TimeDisplayer::updateTime()
 {
     * _nowTime = _nowTime -> addMSecs(-100);
     this->display(_nowTime->toString());
+    checkTimeLimit();
 }
 
 void TimeDisplayer::start()

@@ -17,10 +17,15 @@ MainWindow::MainWindow(QWidget *parent) :
     initTimer();
     initSysTray();
     initUI();
+    initTimeDialog();
     connect(_gameList,SIGNAL(firstGameStarted()),
             _timer,SLOT(start()));
     connect(_gameList,SIGNAL(allGameExited()),
             _timer,SLOT(stop()));
+    connect(_gameList,SIGNAL(itemDoubleClicked(QListWidgetItem*)),
+            this,SLOT(runSelectedGame()));
+    connect(_timer,SIGNAL(timeUsedOut()),
+            this,SLOT(on_timeUsedOut()));
     setFixedSize(this->size());
 }
 
@@ -38,9 +43,16 @@ void MainWindow::initTimer()
     _timer = new TimeDisplayer(_savingData.getLeftTime(),this);
     if (dateDiffToSavedDate())
     {
+        qDebug() << "date diff";
         _timer->setTime(_savingData.getTotalTime());
         _savingData.setTotalTimeChanged(false);
     }
+}
+
+void MainWindow::on_timeUsedOut()
+{
+    // just quit all games
+    _gameList->quitAllGames();
 }
 
 void MainWindow::initTimeDialog()
@@ -165,7 +177,15 @@ void MainWindow::closeEvent(QCloseEvent * event)
 
 void MainWindow::on_buttonRun_clicked()
 {
-    _gameList->runSelectedGame();
+    runSelectedGame();
+}
+
+void MainWindow::runSelectedGame()
+{
+    if (_timer->getTime().toString() != "00:00:00")
+    {
+        _gameList->runSelectedGame();
+    }
 }
 
 void MainWindow::on_buttonDelete_clicked()
